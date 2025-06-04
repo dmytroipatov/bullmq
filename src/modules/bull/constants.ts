@@ -1,1 +1,1 @@
-export const TEST_PROCESSOR_QUEUE_NAME = 'test-processor-queue';
+export const REMINDERS_QUEUE_NAME = 'reminders-queue';

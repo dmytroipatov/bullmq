@@ -2,7 +2,11 @@ import { Module } from '@nestjs/common';
 import { CustomBullModule } from './modules/bull/module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TestEntity } from './modules/bull/entity';
+import {
+  OneTimeReminder,
+  RecurringReminder,
+  Reminder,
+} from './modules/bull/entity';
 import config from './config';
 
 @Module({
@@ -24,7 +28,7 @@ import config from './config';
           password: config.get<string>('POSTGRES_PASSWORD'),
           database: config.get<string>('POSTGRES_DB'),
           synchronize: true,
-          entities: [TestEntity],
+          entities: [Reminder, OneTimeReminder, RecurringReminder],
         };
       },
     }),

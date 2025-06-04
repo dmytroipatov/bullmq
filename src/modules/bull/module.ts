@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { TestProcessor } from './processor';
-import { TEST_PROCESSOR_QUEUE_NAME } from './constants';
-import { TestService } from './service';
+import { ReminderProcessor } from './processor';
+import { REMINDERS_QUEUE_NAME } from './constants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TestEntity } from './entity';
+import { OneTimeReminder, RecurringReminder } from './entity';
+import { RecurringReminderService } from './services/recurring';
+import { OneTimeReminderService } from './services/one-time';
+import { OneTimeReminderController } from './controllers/one-time';
+import { RecurringReminderController } from './controllers/reccuring';
 
 @Module({
   imports: [
@@ -20,11 +23,16 @@ import { TestEntity } from './entity';
       }),
     }),
     BullModule.registerQueue({
-      name: TEST_PROCESSOR_QUEUE_NAME,
+      name: REMINDERS_QUEUE_NAME,
     }),
-    TypeOrmModule.forFeature([TestEntity]),
+    TypeOrmModule.forFeature([OneTimeReminder, RecurringReminder]),
   ],
-  providers: [TestProcessor, TestService],
+  providers: [
+    ReminderProcessor,
+    RecurringReminderService,
+    OneTimeReminderService,
+  ],
   exports: [BullModule],
+  controllers: [OneTimeReminderController, RecurringReminderController],
 })
 export class CustomBullModule {}
